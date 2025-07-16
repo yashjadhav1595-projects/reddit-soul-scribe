@@ -12,8 +12,10 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { analyzeRedditUser, checkBackendHealth, type AnalysisResult } from '@/lib/api';
+import { analyzeRedditUser, checkBackendHealth, type AnalysisResult, fetchRedditUserDetails } from '@/lib/api';
 import { Github, Star, Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
+import RedditUserDetails from '@/components/RedditUserDetails';
+import { PersonaSummaryCard } from '@/components/PersonaSummaryCard';
 
 interface PersonaData {
   name: string;
@@ -38,6 +40,9 @@ const Index = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
   const [error, setError] = useState<string | null>(null);
+  const [userDetails, setUserDetails] = useState<any | null>(null);
+  const [userDetailsLoading, setUserDetailsLoading] = useState(false);
+  const [personaStatus, setPersonaStatus] = useState<'idle' | 'generating' | 'done'>('idle');
   const { toast } = useToast();
 
   // Demo data for testing UI
@@ -80,6 +85,31 @@ const Index = () => {
     
     checkBackend();
   }, []);
+
+  const handleFetchUserDetails = async (inputUsername: string) => {
+    setUserDetailsLoading(true);
+    setError(null);
+    setUsername(inputUsername);
+    setPersona(null);
+    setCitations({});
+    setAnalysisResult(null);
+    setPersonaStatus('idle');
+    try {
+      const details = await fetchRedditUserDetails(inputUsername);
+      setUserDetails(details);
+      // Automatically trigger persona generation after user data is fetched
+      setPersonaStatus('generating');
+      console.log('[Frontend] Persona generation started using Perplexity API for', inputUsername);
+      await handleGeneratePersona(inputUsername);
+      setPersonaStatus('done');
+    } catch (error: any) {
+      setError(error.message || 'Unknown error occurred');
+      setUserDetails(null);
+      setPersonaStatus('idle');
+    } finally {
+      setUserDetailsLoading(false);
+    }
+  };
 
   const handleGeneratePersona = async (inputUsername: string) => {
     setLoading(true);
@@ -134,6 +164,17 @@ const Index = () => {
     handleGeneratePersona('demouser');
   };
 
+  // Add type guard for PersonaSummary
+  function isPersonaSummary(obj: any): obj is import('../components/PersonaSummaryCard').PersonaSummary {
+    return obj && typeof obj === 'object' &&
+      'motivations' in obj &&
+      'personality' in obj &&
+      'behaviour' in obj &&
+      'frustrations' in obj &&
+      'goals' in obj &&
+      'quote' in obj;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/20">
       {/* Header */}
@@ -175,43 +216,43 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-12">
-        {/* Hero Section */}
-        <section className="text-center py-16 space-y-8">
-          <div className="space-y-4">
-            <div className="inline-flex items-center gap-2 bg-reddit-orange/10 text-reddit-orange px-4 py-2 rounded-full text-sm font-medium animate-fade-in">
-              <Star className="h-4 w-4" />
-              Enhanced AI-Powered Analysis
-            </div>
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-reddit-orange via-reddit-blue to-reddit-purple bg-clip-text text-transparent animate-fade-in">
-              Reddit Persona Generator
-            </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in">
-              Discover the personality behind any Reddit profile with advanced AI analysis. 
-              Get detailed insights with smart input, progressive loading, and pinnable traits.
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in">
-            <Button 
-              onClick={handleTryDemo}
-              variant="reddit" 
-              size="lg" 
-              className="px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300"
-            >
-              <Sparkles className="h-5 w-5" />
-              Try Enhanced Demo
-            </Button>
-            <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
-              <Github className="h-5 w-5" />
-              View Source
-            </Button>
-          </div>
-        </section>
+            {/* Hero Section */}
+            <section className="text-center py-16 space-y-8">
+              <div className="space-y-4">
+                <div className="inline-flex items-center gap-2 bg-reddit-orange/10 text-reddit-orange px-4 py-2 rounded-full text-sm font-medium animate-fade-in">
+                  <Star className="h-4 w-4" />
+                  Enhanced AI-Powered Analysis
+                </div>
+                <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-reddit-orange via-reddit-blue to-reddit-purple bg-clip-text text-transparent animate-fade-in">
+                  Reddit Persona Generator
+                </h1>
+                <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in">
+                  Discover the personality behind any Reddit profile with advanced AI analysis. 
+                  Get detailed insights with smart input, progressive loading, and pinnable traits.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in">
+                <Button 
+                  onClick={handleTryDemo}
+                  variant="reddit" 
+                  size="lg" 
+                  className="px-8 py-6 text-lg transform hover:scale-105 transition-all duration-300"
+                >
+                  <Sparkles className="h-5 w-5" />
+                  Try Enhanced Demo
+                </Button>
+                <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
+                  <Github className="h-5 w-5" />
+                  View Source
+                </Button>
+              </div>
+            </section>
 
-        <HowItWorks />
+            <HowItWorks />
 
-        <section className="py-8">
-          <SmartInputBox onSubmit={handleGeneratePersona} loading={loading} />
+            <section className="py-8">
+              <SmartInputBox onSubmit={handleFetchUserDetails} loading={userDetailsLoading} />
           {error && (
             <div className="my-4 p-4 bg-red-100 text-red-800 rounded border border-red-400 shadow-sm" role="alert" aria-live="assertive">
               <strong className="block font-semibold mb-1">Error:</strong>
@@ -222,9 +263,30 @@ const Index = () => {
                   : error}
             </div>
           )}
-        </section>
+            </section>
 
-        {/* Loading State */}
+        {/* User Details Section */}
+        {userDetailsLoading && (
+          <section className="py-16">
+            <ProgressiveLoadingSpinner message="Fetching Reddit user details..." />
+          </section>
+        )}
+        {userDetails && (
+          <section className="space-y-8">
+            <RedditUserDetails userData={userDetails} />
+            {/* Persona generation status and spinner */}
+            {!persona && personaStatus === 'generating' && !userDetailsLoading && (
+              <div className="flex flex-col items-center gap-4">
+                <ProgressiveLoadingSpinner message="Generating persona using Perplexity AI..." />
+                <Badge variant="default" className="bg-blue-600 text-white text-lg px-4 py-2">
+                  Persona is being generated using Perplexity API Key
+                </Badge>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Loading State for Persona */}
         {loading && (
           <section className="py-16">
             <ProgressiveLoadingSpinner message="Analyzing Reddit profile with enhanced AI..." />
@@ -245,21 +307,26 @@ const Index = () => {
                 </Button>
               </div>
             </div>
-            
             <div className="grid lg:grid-cols-2 gap-8">
-            <EnhancedPersonaCard 
-              persona={persona} 
-              citations={citations} 
-              username={username} 
-            />
-              
+              {/* Render PersonaSummaryCard if Perplexity persona, else EnhancedPersonaCard */}
+              {isPersonaSummary(persona) ? (
+                <PersonaSummaryCard
+                  persona={persona}
+                  avatarUrl={userDetails?.userInfo?.snoovatar_img || userDetails?.userInfo?.icon_img}
+                />
+              ) : (
+                <EnhancedPersonaCard
+                  persona={persona}
+                  citations={citations}
+                  username={username}
+                />
+              )}
               <div className="space-y-8">
                 <PersonaImage
                   personaImage={analysisResult?.personaImage}
                   personaName={persona.name}
                   archetype={persona.archetype}
                 />
-                
                 <SimulatedPost
                   simulatedPost={analysisResult?.simulatedPost}
                   personaName={persona.name}
@@ -267,16 +334,14 @@ const Index = () => {
                 />
               </div>
             </div>
-            
-            <CitationsList 
-              citations={citations} 
-              username={username} 
+            <CitationsList
+              citations={citations}
+              username={username}
             />
-            
-            <DownloadButton 
-              persona={persona} 
-              username={username} 
-              citations={citations} 
+            <DownloadButton
+              persona={persona}
+              username={username}
+              citations={citations}
             />
           </section>
         )}

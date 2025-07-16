@@ -1,227 +1,116 @@
-# 🧠 Reddit Soul Scribe - AI-Powered Personality Analysis
+# Reddit Soul Scribe 1
 
-> **Advanced Reddit persona generator with multi-modal AI, visual portraits, and reverse simulation**
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-brightgreen)
+![React](https://img.shields.io/badge/React-18-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-yellow)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://reddit.com)
-[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Together.ai](https://img.shields.io/badge/Together.ai-000000?style=for-the-badge&logo=openai&logoColor=white)](https://together.ai)
+---
+
+## ✨ Project Overview
+
+**Reddit Soul Scribe 1** is a full-stack AI-powered Reddit persona generator. It fetches Reddit user data, analyzes it with advanced AI (Perplexity API), and generates a detailed psychological persona. The project features a modern React frontend, robust Node.js/Express backend, and a Python script for batch persona generation.
+
+---
 
 ## 🚀 Features
+- Fetches comprehensive Reddit user data (profile, posts, comments, overview)
+- Generates advanced personas using the Perplexity API
+- Modern, responsive UI with dark/light mode
+- Automatic persona generation and status feedback
+- Download persona as .txt file
+- Python script for command-line persona generation
+- Detailed logging and error handling
 
-### 🧠 **AI-Powered Analysis**
-- **Multi-Model AI Pipeline**: Uses Llama 3.3-70B for persona generation, FLUX.1-schnell for visual portraits, and EXAONE-Deep-32B for post simulation
-- **Real Reddit Integration**: Fetches actual Reddit posts and comments using PRAW
-- **Smart Prompt Engineering**: Optimized prompts for accurate personality analysis
-- **Archetype Classification**: Categorizes users into personality archetypes (e.g., "The Curious Analyst", "The Empathetic Listener")
+---
 
-### 🎨 **Visual AI Features**
-- **AI-Generated Portraits**: Creates stylized digital portraits based on personality traits
-- **FLUX.1-schnell Integration**: High-quality image generation with Together.ai
-- **Visual Prompt Optimization**: Converts personality traits into visual descriptions
+## 🛠️ Setup Instructions
 
-### 🔄 **Reverse Persona Simulation**
-- **Post Generation**: AI creates realistic Reddit posts that match the analyzed personality
-- **Tone Matching**: Simulates communication style and writing patterns
-- **Authenticity Validation**: Tests how well the persona analysis captures the user's voice
-
-### 🎛️ **Advanced UX Features**
-- **Dark/Light Mode**: Beautiful theme switching with system preference detection
-- **Progressive Loading**: Multi-stage analysis visualization
-- **Pinnable Traits**: Save important personality insights
-- **Interactive Citations**: Hover to see source Reddit posts
-- **Real-time Backend Status**: Shows when AI backend is online vs demo mode
-
-### 🔧 **Technical Excellence**
-- **Modular Architecture**: Clean separation between frontend and backend
-- **Type Safety**: Comprehensive TypeScript interfaces
-- **Error Handling**: Graceful fallbacks and user-friendly error messages
-- **Performance Optimized**: React Query for efficient data fetching
-- **Responsive Design**: Mobile-first approach with beautiful animations
-
-## 🛠️ Tech Stack
-
-### **Frontend**
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** with custom design system
-- **shadcn/ui** component library
-- **React Query** for state management
-- **React Router** for navigation
-
-### **Backend**
-- **Node.js** with Express
-- **PRAW** for Reddit API integration
-- **Together.ai** for multi-model AI processing
-- **Axios** for HTTP requests
-
-### **AI Models**
-- **meta-llama/Llama-3.3-70B-Instruct-Turbo-Free**: Persona generation
-- **black-forest-labs/FLUX.1-schnell**: Visual portrait generation
-- **lg-ai/EXAONE-Deep-32B**: Post simulation
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ and npm
-- Reddit API credentials
-- Together.ai API key
-
-### Installation
-
-1. **Clone the repository**
+### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
-cd reddit-soul-scribe
+git clone https://github.com/yashjadhav1595-projects/reddit-soul-scribe1.git
+cd reddit-soul-scribe1
 ```
 
-2. **Install dependencies**
+### 2. Install Node.js Dependencies
 ```bash
 npm install
 ```
 
-3. **Set up environment variables**
-```bash
-cp env.example .env
+### 3. Configure Environment Variables
+Create a `.env` file in the project root with your Reddit and Perplexity API credentials:
 ```
-
-Edit `.env` with your API keys:
-```env
-# Reddit API Configuration
 REDDIT_CLIENT_ID=your_reddit_client_id
 REDDIT_CLIENT_SECRET=your_reddit_client_secret
-REDDIT_USER_AGENT=UserPersonaScript/0.1 by your_username
-
-# Together.ai API Configuration
-TOGETHER_API_KEY=your_together_ai_api_key
-
-# Server Configuration
-PORT=3001
-NODE_ENV=development
+REDDIT_USER_AGENT=your_user_agent
+REDDIT_USERNAME=your_reddit_username
+REDDIT_PASSWORD=your_reddit_password
+PERPLEXITY_API_KEY=your_perplexity_api_key
 ```
 
-4. **Start the backend server**
+### 4. Start the Backend
 ```bash
-npm run dev:backend
+cd backend
+node server.js
 ```
+The backend will run on [http://localhost:3001](http://localhost:3001)
 
-5. **Start the frontend development server**
+### 5. Start the Frontend
 ```bash
 npm run dev
 ```
-
-6. **Open your browser**
-Navigate to `http://localhost:8080`
-
-## 🎯 Usage
-
-### **Basic Analysis**
-1. Enter a Reddit username (e.g., `u/username` or just `username`)
-2. Click "Analyze Profile" to start the AI analysis
-3. View the generated persona with detailed insights
-
-### **Advanced Features**
-- **Visual Portrait**: See an AI-generated image of the persona
-- **Post Simulation**: Generate realistic Reddit posts the user might write
-- **Pinnable Traits**: Click the pin icon to save important insights
-- **Citations**: Hover over quote icons to see source Reddit posts
-
-### **Demo Mode**
-If the backend is offline, the app automatically switches to demo mode with sample data.
-
-## 🔧 Development
-
-### **Project Structure**
-```
-reddit-soul-scribe/
-├── src/
-│   ├── components/          # React components
-│   │   ├── ui/             # shadcn/ui components
-│   │   ├── PersonaImage.tsx    # AI-generated portraits
-│   │   ├── SimulatedPost.tsx   # Reverse persona simulation
-│   │   └── ...
-│   ├── lib/
-│   │   ├── api.ts          # API service layer
-│   │   └── utils.ts        # Utility functions
-│   ├── pages/              # Page components
-│   └── hooks/              # Custom React hooks
-├── backend/
-│   └── server.js           # Express backend server
-├── public/                 # Static assets
-└── package.json
-```
-
-### **Available Scripts**
-```bash
-npm run dev              # Start frontend development server
-npm run dev:backend      # Start backend server
-npm run build            # Build for production
-npm run lint             # Run ESLint
-npm run preview          # Preview production build
-```
-
-### **API Endpoints**
-- `POST /api/analyze` - Analyze Reddit user and generate persona
-- `GET /api/health` - Backend health check
-
-## 🎨 Customization
-
-### **Adding New AI Models**
-The backend supports multiple Together.ai models. Add new models in `backend/server.js`:
-
-```javascript
-// Add new model configuration
-const MODEL_CONFIG = {
-  'persona': 'meta-llama/Llama-3.3-70B-Instruct-Turbo-Free',
-  'image': 'black-forest-labs/FLUX.1-schnell',
-  'simulation': 'lg-ai/EXAONE-Deep-32B',
-  'new-feature': 'your-model-name'
-};
-```
-
-### **Customizing Prompts**
-Edit prompt templates in `backend/server.js`:
-- `createPersonaPrompt()` - Persona generation prompts
-- `createVisualPrompt()` - Image generation prompts
-- `createSimulationPrompt()` - Post simulation prompts
-
-### **Styling**
-The app uses Tailwind CSS with custom design tokens. Modify `src/index.css` for:
-- Color schemes
-- Animations
-- Custom gradients
-- Dark mode variables
-
-## 🔐 Security & Privacy
-
-- **No Data Storage**: Reddit data is processed in-memory and not stored
-- **API Key Security**: Environment variables for sensitive credentials
-- **Rate Limiting**: Built-in protection against API abuse
-- **Error Handling**: Graceful handling of API failures
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Reddit** for providing the API
-- **Together.ai** for powerful AI models
-- **shadcn/ui** for beautiful components
-- **Lovable.dev** for the development platform
-
-## 📞 Support
-
-For support, email support@example.com or join our Discord server.
+The frontend will run on [http://localhost:5173](http://localhost:5173) (or as shown in your terminal)
 
 ---
 
-**Built with ❤️ for the Reddit community**
+## 🐍 Python Script: Persona Generation
+
+### Requirements
+- Python 3.8+
+- `requests` library (`pip install requests`)
+
+### Usage
+```bash
+python generate_persona.py <reddit_username>
+```
+- This will fetch the persona for the given Reddit user and save it as `persona_<username>.txt` in the current directory.
+
+### Example
+```bash
+python generate_persona.py StationLevel1840
+```
+
+---
+
+## 🖥️ Example Output
+
+- Reddit user data and persona are shown in the frontend for comparison.
+- Persona .txt files are generated for each analyzed user.
+
+---
+
+## 📦 Submission Instructions
+- **You have 48 hours to complete this assignment.**
+- Submit the link to your public GitHub repository before the deadline.
+- Make sure your repository is public so it can be evaluated.
+- Your repo must contain:
+  - All project files (backend, frontend, Python script)
+  - Persona .txt files (if generated)
+  - This README.md with clear setup and usage instructions
+
+---
+
+## 🛠️ Troubleshooting
+- Ensure your `.env` file is correctly configured and the backend is running before using the Python script or frontend.
+- If you see CORS or network errors, check that both backend and frontend are running on the correct ports.
+- For API errors, check your Reddit and Perplexity API credentials.
+
+---
+
+## 👨‍💻 Author
+- [yashjadhav1595-projects](https://github.com/yashjadhav1595-projects)
+
+---
+
+## 📝 License
+MIT

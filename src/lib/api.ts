@@ -84,4 +84,29 @@ export const checkBackendHealth = async (): Promise<boolean> => {
   }
 };
 
+export const fetchRedditUserDetails = async (username: string): Promise<any> => {
+  try {
+    const response = await api.get(`/api/user/${encodeURIComponent(username)}`);
+    if (response.data.success) {
+      return response.data.data;
+    } else {
+      throw new Error(response.data.error || 'Failed to fetch user details');
+    }
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        throw new Error(
+          error.response.data?.error ||
+          `Server error: ${error.response.status} ${error.response.statusText}`
+        );
+      } else if (error.request) {
+        throw new Error('No response from backend. Is the server running?');
+      } else {
+        throw new Error('Request error: ' + error.message);
+      }
+    }
+    throw new Error('Unexpected error: ' + (error?.message || error));
+  }
+};
+
 export default api; 
