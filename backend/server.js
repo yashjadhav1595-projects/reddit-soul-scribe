@@ -53,6 +53,7 @@ if (missingVars.length > 0) {
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -837,6 +838,10 @@ app.get("/api/user/:username/overview", async (req, res) => {
     console.error("Full error object:", error);
     res.status(status || 500).json({ success: false, error: redditError, details: error });
   }
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
