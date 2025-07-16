@@ -1,17 +1,18 @@
 {
   "name": "gadget_dev",
-  "age": "25-35",
+  "age": "30-40",
   "occupation": "Shopify App Developer",
-  "status": "Active Contributor",
-  "location": "Unknown",
-  "tier": "Medium Active User",
-  "archetype": "Tech-Savvy Problem Solver",
+  "status": "active contributor",
+  "location": "likely North America",
+  "tier": "medium-active user",
+  "archetype": "Tech-savvy problem solver",
   "traits": [
-    "Analytical",
-    "Community-Oriented",
-    "Detail-Focused",
-    "Helpful",
-    "Enthusiastic about sports and music"
+    "analytical",
+    "community-oriented",
+    "detail-focused",
+    "helpful",
+    "tech enthusiast",
+    "sports and music fan"
   ],
   "motivations": {
     "convenience": 4,
@@ -23,31 +24,31 @@
   },
   "personality": {
     "introvert": 3,
-    "extrovert": 3,
+    "extrovert": 2,
     "intuition": 4,
     "sensing": 3,
     "feeling": 3,
-    "thinking": 4,
+    "thinking": 5,
     "perceiving": 3,
-    "judging": 3
+    "judging": 4
   },
   "behaviour": [
-    "Posts about sports and local music history",
-    "Shares helpful content and resources related to Shopify app development",
-    "Engages constructively in community discussions",
-    "Focuses on solving user problems with app suggestions",
-    "Provides marketing and analytics advice for app developers"
+    "actively participates in niche technical communities",
+    "shares useful resources and advice",
+    "engages in conversations about sports and music",
+    "seeks and provides detailed information",
+    "monitors trends and problem areas in e-commerce apps"
   ],
   "frustrations": [
-    "Lack of comprehensive video coverage in sports highlights",
-    "Limited official information or resources for app marketing",
-    "Difficulty in finding precise problem trends among Shopify merchants"
+    "lack of comprehensive or multi-angle content in official recaps",
+    "difficulty reaching target audience for app marketing",
+    "incomplete or insufficient data to optimize app performance"
   ],
   "goals": [
-    "Help Shopify merchants find effective app solutions",
-    "Increase visibility and downloads of Shopify apps",
-    "Stay informed and contribute to communities related to sports and local culture",
-    "Support peers in Shopify app development through advice and resources"
+    "improve Shopify apps to solve merchant problems",
+    "build community trust through helpful engagement",
+    "increase app visibility and downloads",
+    "stay informed about relevant topics like sports and music"
   ],
   "quote": "Spend time in the Shop Forums and the merchant sub. Keep your eyes open for problem trends that an app could solve!"
 }

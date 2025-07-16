@@ -10,7 +10,7 @@ interface CitationsListProps {
   username: string;
 }
 
-export const CitationsList: React.FC<CitationsListProps> = ({ citations, username }) => {
+export const CitationsList: React.FC<CitationsListProps> = ({ citations = {}, username }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const formatCitation = (text: string) => {
