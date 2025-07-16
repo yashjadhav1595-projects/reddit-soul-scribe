@@ -34,25 +34,38 @@ def fetch_persona(username):
         sys.exit(1)
 
 
-def save_persona_to_file(persona, username):
-    """Save persona JSON to a .txt file."""
+def save_persona_to_file(persona, username, html_content=None):
+    """Save persona JSON to a .txt file and HTML file if provided."""
     filename = f"persona_{username}.txt"
     try:
         with open(filename, "w", encoding="utf-8") as f:
             import json
             f.write(json.dumps(persona, indent=2, ensure_ascii=False))
         print(f"[INFO] Persona saved to {filename}")
+        if html_content:
+            html_filename = f"persona_{username}.html"
+            with open(html_filename, "w", encoding="utf-8") as f:
+                f.write(html_content)
+            print(f"[INFO] Persona HTML saved to {html_filename}")
     except Exception as e:
         print(f"[ERROR] Could not save persona to file: {e}")
         sys.exit(1)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Fetch Reddit persona and save to .txt file.")
+    parser = argparse.ArgumentParser(description="Fetch Reddit persona and save to .txt and .html file.")
     parser.add_argument("username", help="Reddit username to analyze")
     args = parser.parse_args()
     persona = fetch_persona(args.username)
-    save_persona_to_file(persona, args.username)
+    # Try to get HTML content from backend if available
+    html_content = None
+    if 'personaHtmlFilePath' in persona:
+        try:
+            with open(persona['personaHtmlFilePath'], 'r', encoding='utf-8') as f:
+                html_content = f.read()
+        except Exception:
+            pass
+    save_persona_to_file(persona, args.username, html_content)
 
 
 if __name__ == "__main__":

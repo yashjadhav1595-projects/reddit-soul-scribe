@@ -3,6 +3,7 @@
 ## Prerequisites
 - Node.js 18+ and npm
 - Git
+- Python 3.8+ (for persona report script)
 
 ## Quick Start
 
@@ -39,6 +40,13 @@ npm run dev:backend
 npm run dev
 ```
 
+### 4. Generate Persona Reports (Python Script)
+```bash
+# In the project root or backend folder
+python generate_persona.py <reddit_username>
+# This will save persona_<username>.txt and persona_<username>.html
+```
+
 ## 🔑 API Keys Setup (Optional)
 
 ### Together.ai API Key
@@ -70,9 +78,11 @@ REDDIT_USER_AGENT=UserPersonaScript/0.1 by your_username
 ### Full AI Mode (With API Keys)
 - ✅ Real Reddit data analysis
 - ✅ AI-generated personas using Llama 3.3-70B
-- ✅ Visual portraits using FLUX.1-schnell
+- ✅ Visual portraits using FLUX.1-schnell or Unsplash
 - ✅ Post simulation using EXAONE-Deep-32B
 - ✅ All demo features
+- ✅ Persona report download as HTML (with inlined CSS) and TXT
+- ✅ Grouped citations for each trait
 
 ## 🐛 Troubleshooting
 

@@ -45,6 +45,8 @@ const Index = () => {
   const [personaStatus, setPersonaStatus] = useState<'idle' | 'generating' | 'done'>('idle');
   const [logMessages, setLogMessages] = useState<string[]>([]);
   const { toast } = useToast();
+  const [simulatedPost, setSimulatedPost] = useState<string | undefined>(undefined);
+  const [simPostLoading, setSimPostLoading] = useState(false);
 
   const addLog = (msg: string) => {
     setLogMessages(prev => [...prev, msg]);
@@ -183,6 +185,27 @@ const Index = () => {
 
   const handleTryDemo = () => {
     handleGeneratePersona('demouser');
+  };
+
+  const handleRegenerateSimulatedPost = async () => {
+    if (!username || !persona) return;
+    setSimPostLoading(true);
+    try {
+      // Call backend to generate only a simulated post (reuse persona if possible)
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, comprehensive: true })
+      });
+      const data = await response.json();
+      if (data.success && data.data?.persona?.simulated_post) {
+        setSimulatedPost(data.data.persona.simulated_post);
+      }
+    } catch (e) {
+      setSimulatedPost(undefined);
+    } finally {
+      setSimPostLoading(false);
+    }
   };
 
   // Add type guard for PersonaSummary
@@ -349,9 +372,11 @@ const Index = () => {
                   archetype={persona.archetype}
                 />
                 <SimulatedPost
-                  simulatedPost={analysisResult?.simulatedPost}
+                  simulatedPost={simulatedPost || analysisResult?.simulatedPost}
                   personaName={persona.name}
                   archetype={persona.archetype}
+                  onRegenerate={handleRegenerateSimulatedPost}
+                  isLoading={simPostLoading}
                 />
               </div>
             </div>

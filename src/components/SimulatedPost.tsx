@@ -12,6 +12,7 @@ interface SimulatedPostProps {
   archetype: string;
   onRegenerate?: () => void;
   className?: string;
+  isLoading?: boolean;
 }
 
 export const SimulatedPost: React.FC<SimulatedPostProps> = ({
@@ -19,7 +20,8 @@ export const SimulatedPost: React.FC<SimulatedPostProps> = ({
   personaName,
   archetype,
   onRegenerate,
-  className
+  className,
+  isLoading
 }) => {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState('simulation');
@@ -58,6 +60,22 @@ export const SimulatedPost: React.FC<SimulatedPostProps> = ({
           <Badge variant="outline" className="text-xs">
             {archetype}
           </Badge>
+          {onRegenerate && (
+            <Button
+              variant="reddit"
+              size="lg"
+              className="mt-4"
+              onClick={onRegenerate}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+              ) : (
+                <RefreshCw className="h-4 w-4 mr-2" />
+              )}
+              Generate Post
+            </Button>
+          )}
         </CardContent>
       </Card>
     );

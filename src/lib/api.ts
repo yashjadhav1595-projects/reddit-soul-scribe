@@ -51,7 +51,12 @@ export const analyzeRedditUser = async (username: string): Promise<AnalysisResul
     const response = await api.post('/api/analyze', { username });
 
     if (response.data.success) {
-      return response.data.data;
+      const data = response.data.data;
+      // Map simulated_post to simulatedPost for frontend compatibility
+      return {
+        ...data,
+        simulatedPost: data.simulated_post || data.simulatedPost || '',
+      };
     } else {
       throw new Error(response.data.error || 'Analysis failed');
     }

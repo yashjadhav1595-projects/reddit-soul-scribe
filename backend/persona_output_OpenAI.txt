@@ -1,23 +1,24 @@
 {
   "name": "OpenAI",
   "age": "N/A",
-  "occupation": "AI Research and Development Organization",
-  "status": "Active",
-  "location": "San Francisco, CA (presumed)",
-  "tier": "Enterprise/Institution",
-  "archetype": "Innovator and Knowledge Sharer",
+  "occupation": "AI Research & Development Organization",
+  "status": "Official Brand Account",
+  "location": "Global / USA (Pacific Time Zone)",
+  "tier": "Enterprise/Institutional",
+  "archetype": "Innovator & Educator",
   "traits": [
     "authoritative",
-    "transparent",
+    "informative",
     "engaged",
+    "transparent",
     "collaborative",
-    "informative"
+    "responsive"
   ],
   "motivations": {
     "convenience": 4,
     "wellness": 2,
-    "speed": 5,
-    "preferences": 4,
+    "speed": 4,
+    "preferences": 3,
     "comfort": 3,
     "dietary_needs": 1
   },
@@ -25,30 +26,32 @@
     "introvert": 2,
     "extrovert": 4,
     "intuition": 5,
-    "sensing": 3,
+    "sensing": 2,
     "feeling": 3,
     "thinking": 5,
     "perceiving": 3,
     "judging": 4
   },
   "behaviour": [
-    "Hosts AMAs to share knowledge and updates",
-    "Engages with community questions transparently",
-    "Provides proof and verification for credibility",
-    "Focuses on research, product development, and future trends",
-    "Clarifies user concerns with detailed responses"
+    "hosting AMAs to engage community",
+    "providing detailed, transparent information",
+    "collaborating with internal experts",
+    "actively responding to user queries",
+    "sharing official updates and proofs",
+    "balancing technical depth with accessibility"
   ],
   "frustrations": [
-    "Managing high volume of inquiries",
-    "Addressing nuanced questions about AI behavior",
-    "Communicating complex technical concepts clearly",
-    "Balancing openness with company confidentiality"
+    "misunderstandings about product limits",
+    "need for clear communication",
+    "balancing openness with confidentiality",
+    "managing high volume of user questions"
   ],
   "goals": [
-    "Promote understanding of AI technologies",
-    "Build trust and transparency with the public",
-    "Gather feedback to improve AI products",
-    "Showcase leadership in AI research and development"
+    "educate the community about AI advancements",
+    "gather user feedback to improve products",
+    "maintain transparency and trust",
+    "promote responsible AI development",
+    "expand user engagement on Reddit"
   ],
-  "quote": "Thank you for the great questions. Everyone had a lot of fun! And no, ChatGPT did not write this."
+  "quote": "Thank you for the great questions. We'll be back for more in the future."
 }
