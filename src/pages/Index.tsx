@@ -43,7 +43,13 @@ const Index = () => {
   const [userDetails, setUserDetails] = useState<any | null>(null);
   const [userDetailsLoading, setUserDetailsLoading] = useState(false);
   const [personaStatus, setPersonaStatus] = useState<'idle' | 'generating' | 'done'>('idle');
+  const [logMessages, setLogMessages] = useState<string[]>([]);
   const { toast } = useToast();
+
+  const addLog = (msg: string) => {
+    setLogMessages(prev => [...prev, msg]);
+    console.log(msg);
+  };
 
   // Demo data for testing UI
   const demoPersona: PersonaData = {
@@ -86,40 +92,18 @@ const Index = () => {
     checkBackend();
   }, []);
 
-  const handleFetchUserDetails = async (inputUsername: string) => {
-    setUserDetailsLoading(true);
-    setError(null);
-    setUsername(inputUsername);
-    setPersona(null);
-    setCitations({});
-    setAnalysisResult(null);
-    setPersonaStatus('idle');
-    try {
-      const details = await fetchRedditUserDetails(inputUsername);
-      setUserDetails(details);
-      // Automatically trigger persona generation after user data is fetched
-      setPersonaStatus('generating');
-      console.log('[Frontend] Persona generation started using Perplexity API for', inputUsername);
-      await handleGeneratePersona(inputUsername);
-      setPersonaStatus('done');
-    } catch (error: any) {
-      setError(error.message || 'Unknown error occurred');
-      setUserDetails(null);
-      setPersonaStatus('idle');
-    } finally {
-      setUserDetailsLoading(false);
-    }
-  };
-
   const handleGeneratePersona = async (inputUsername: string) => {
     setLoading(true);
     setError(null);
     setUsername(inputUsername);
+    addLog(`[Frontend] handleGeneratePersona called for ${inputUsername}`);
     
     try {
       if (backendStatus === 'online') {
+        addLog(`[Frontend] Backend is online. Calling analyzeRedditUser for ${inputUsername}`);
         // Use real API
         const result = await analyzeRedditUser(inputUsername);
+        addLog(`[Frontend] analyzeRedditUser response: ${JSON.stringify(result)}`);
         setAnalysisResult(result);
         setPersona(result.persona);
         setCitations(result.citations);
@@ -130,6 +114,7 @@ const Index = () => {
           duration: 5000
         });
       } else {
+        addLog(`[Frontend] Backend is offline. Using demo data for ${inputUsername}`);
         // Fallback to demo data
         await new Promise(resolve => setTimeout(resolve, 8000));
       setPersona(demoPersona);
@@ -143,6 +128,7 @@ const Index = () => {
       }
     } catch (error: any) {
       setError(error.message || 'Unknown error occurred');
+      addLog(`[Frontend] Error in handleGeneratePersona: ${error.message || error}`);
       toast({
         title: "Generation failed",
         description: error.message || "Please try again later or check if the username exists.",
@@ -150,6 +136,41 @@ const Index = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleFetchUserDetails = async (inputUsername: string) => {
+    setUserDetailsLoading(true);
+    setError(null);
+    setUsername(inputUsername);
+    setPersona(null);
+    setCitations({});
+    setAnalysisResult(null);
+    setPersonaStatus('idle');
+    addLog(`[Frontend] handleFetchUserDetails called for ${inputUsername}`);
+    try {
+      const details = await fetchRedditUserDetails(inputUsername);
+      addLog(`[Frontend] fetchRedditUserDetails response: ${JSON.stringify(details)}`);
+      setUserDetails(details);
+      // If persona is present in the response, use it
+      if (details && details.persona) {
+        setPersona(details.persona);
+        setPersonaStatus('done');
+        addLog('[Frontend] Persona received from backend and set.');
+      } else {
+        // Automatically trigger persona generation after user data is fetched
+        setPersonaStatus('generating');
+        addLog('[Frontend] Persona generation started using Perplexity API for ' + inputUsername);
+        await handleGeneratePersona(inputUsername);
+        setPersonaStatus('done');
+      }
+    } catch (error: any) {
+      setError(error.message || 'Unknown error occurred');
+      addLog(`[Frontend] Error in handleFetchUserDetails: ${error.message || error}`);
+      setUserDetails(null);
+      setPersonaStatus('idle');
+    } finally {
+      setUserDetailsLoading(false);
     }
   };
 
@@ -346,6 +367,9 @@ const Index = () => {
           </section>
         )}
       </main>
+
+      {/* Error and log display section */}
+      {/* Removed as per instructions */}
 
       {/* Footer */}
       <footer className="border-t border-border/40 bg-secondary/20 mt-16">

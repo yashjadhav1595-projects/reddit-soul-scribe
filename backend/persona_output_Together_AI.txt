@@ -1,0 +1,49 @@
+{
+  "name": "Together_AI",
+  "age": "25-34",
+  "occupation": "AI Researcher",
+  "status": "Single",
+  "location": "San Francisco, CA",
+  "tier": "Observer",
+  "archetype": "The Analyst",
+  "traits": [
+    "Curious",
+    "Tech-savvy",
+    "Empathetic",
+    "Detail-oriented"
+  ],
+  "motivations": {
+    "convenience": 3,
+    "wellness": 4,
+    "speed": 2,
+    "preferences": 5,
+    "comfort": 3,
+    "dietary_needs": 2
+  },
+  "personality": {
+    "introvert": 4,
+    "extrovert": 2,
+    "intuition": 5,
+    "sensing": 3,
+    "feeling": 4,
+    "thinking": 5,
+    "perceiving": 3,
+    "judging": 2
+  },
+  "behaviour": [
+    "Lurks on forums",
+    "Seeks detailed explanations",
+    "Prefers reading over posting"
+  ],
+  "frustrations": [
+    "Uninformative discussions",
+    "Overly repetitive content",
+    "Lack of technical depth"
+  ],
+  "goals": [
+    "Learn new AI developments",
+    "Find niche communities",
+    "Contribute when confident"
+  ],
+  "quote": "I'm here to learn, not to be loud."
+}

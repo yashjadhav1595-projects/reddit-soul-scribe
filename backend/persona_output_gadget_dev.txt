@@ -1,0 +1,53 @@
+{
+  "name": "gadget_dev",
+  "age": "25-35",
+  "occupation": "Shopify App Developer",
+  "status": "Active Contributor",
+  "location": "Unknown",
+  "tier": "Medium Active User",
+  "archetype": "Tech-Savvy Problem Solver",
+  "traits": [
+    "Analytical",
+    "Community-Oriented",
+    "Detail-Focused",
+    "Helpful",
+    "Enthusiastic about sports and music"
+  ],
+  "motivations": {
+    "convenience": 4,
+    "wellness": 2,
+    "speed": 4,
+    "preferences": 3,
+    "comfort": 3,
+    "dietary_needs": 1
+  },
+  "personality": {
+    "introvert": 3,
+    "extrovert": 3,
+    "intuition": 4,
+    "sensing": 3,
+    "feeling": 3,
+    "thinking": 4,
+    "perceiving": 3,
+    "judging": 3
+  },
+  "behaviour": [
+    "Posts about sports and local music history",
+    "Shares helpful content and resources related to Shopify app development",
+    "Engages constructively in community discussions",
+    "Focuses on solving user problems with app suggestions",
+    "Provides marketing and analytics advice for app developers"
+  ],
+  "frustrations": [
+    "Lack of comprehensive video coverage in sports highlights",
+    "Limited official information or resources for app marketing",
+    "Difficulty in finding precise problem trends among Shopify merchants"
+  ],
+  "goals": [
+    "Help Shopify merchants find effective app solutions",
+    "Increase visibility and downloads of Shopify apps",
+    "Stay informed and contribute to communities related to sports and local culture",
+    "Support peers in Shopify app development through advice and resources"
+  ],
+  "quote": "Spend time in the Shop Forums and the merchant sub. Keep your eyes open for problem trends that an app could solve!"
+}

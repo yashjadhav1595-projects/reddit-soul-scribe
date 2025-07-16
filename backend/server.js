@@ -57,7 +57,7 @@ app.use(cors());
 // Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({ 
-    status: "ok", 
+    status: "OK", // Uppercase for frontend compatibility
     message: "Backend is running",
     timestamp: new Date().toISOString(),
     mode: NODE_ENV,
@@ -391,6 +391,8 @@ function analyzeUserActivity(submitted, comments, userInfo) {
 
 // Perplexity persona generation
 async function generatePerplexityPersona(userData) {
+  const modelName = 'sonar'; // Use a valid Perplexity model
+  console.log(`[Perplexity] Entered generatePerplexityPersona. Using model: ${modelName}`);
   const prompt = `Given the following Reddit user data, generate a user persona in this JSON format:\n\n{
   "name": "string",
   "age": "string",
@@ -408,24 +410,30 @@ async function generatePerplexityPersona(userData) {
   "quote": "string"
 }\n\nUser data:\n${JSON.stringify(userData)}\n\nReturn only the JSON object.`;
   try {
+    const payload = {
+      model: modelName,
+      messages: [
+        { role: 'system', content: 'You are a world-class user persona analyst.' },
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: 1024,
+      temperature: 0.7
+    };
+    console.log('[Perplexity] About to send API request with payload:');
+    console.log(JSON.stringify(payload, null, 2));
     const response = await axios.post(
       'https://api.perplexity.ai/chat/completions',
-      {
-        model: 'llama-3-sonar-large-32k-online',
-        messages: [
-          { role: 'system', content: 'You are a world-class user persona analyst.' },
-          { role: 'user', content: prompt }
-        ],
-        max_tokens: 1024,
-        temperature: 0.7
-      },
+      payload,
       {
         headers: {
           'Authorization': `Bearer ${PERPLEXITY_API_KEY}`,
           'Content-Type': 'application/json',
         },
+        timeout: 30000 // 30 seconds
       }
     );
+    console.log('[Perplexity] Raw API response:');
+    console.log(JSON.stringify(response.data, null, 2));
     let content = response.data.choices?.[0]?.message?.content || response.data.choices?.[0]?.text || '';
     let persona;
     try {
@@ -433,11 +441,19 @@ async function generatePerplexityPersona(userData) {
     } catch {
       const match = content.match(/\{[\s\S]*\}/);
       if (match) persona = JSON.parse(match[0]);
-      else throw new Error('Could not parse persona JSON from Perplexity response.');
+      else {
+        console.error('[Perplexity] Could not parse persona JSON from response. Raw content:', content);
+        throw new Error('Could not parse persona JSON from Perplexity response.');
+      }
     }
+    console.log('[Perplexity] Persona JSON parsed successfully.');
     return persona;
   } catch (err) {
-    console.error('[Perplexity] API call failed:', err?.response?.data || err.message);
+    console.error(`[Perplexity] API call failed for model ${modelName}:`, err?.response?.data || err.message);
+    if (err?.response) {
+      console.error('[Perplexity] Full error response:', JSON.stringify(err.response.data, null, 2));
+    }
+    console.error(`[Perplexity] If this model fails, try switching to another available model in the code.`);
     throw err;
   }
 }
@@ -515,11 +531,20 @@ app.get("/api/user/:username", async (req, res) => {
     const accessToken = await getRedditAccessToken();
     console.log(`[Express] Access token obtained.`);
     const userData = await fetchComprehensiveUserData(username, accessToken, parseInt(limit));
-    console.log(`[Express] All data fetched for ${username}, sending response to frontend.`);
-    
+    console.log(`[Express] All data fetched for ${username}.`);
+    // Force persona generation for debugging
+    let persona = null;
+    try {
+      console.log(`[Express] Forcing persona generation for ${username} using Perplexity API...`);
+      persona = await generatePerplexityPersona(userData);
+      console.log(`[Express] Persona generated for ${username}:`, JSON.stringify(persona, null, 2));
+    } catch (personaErr) {
+      console.error(`[Express] Persona generation failed for ${username}:`, personaErr?.message || personaErr);
+    }
     res.json({
       success: true,
       data: userData,
+      persona: persona,
     });
   } catch (error) {
     const status = error?.status || error?.response?.status;
