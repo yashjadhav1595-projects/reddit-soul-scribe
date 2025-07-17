@@ -9,7 +9,7 @@
 
 ## ✨ Project Overview
 
-**Reddit Soul Scribe 1** is a full-stack AI-powered Reddit persona generator. It fetches Reddit user data, analyzes it with advanced AI (Perplexity API), and generates a detailed psychological persona. The project features a modern React frontend, robust Node.js/Express backend, and a Python script for batch persona generation.
+**Reddit Soul Scribe** is a full-stack AI-powered Reddit persona generator. It fetches Reddit user data, analyzes it with advanced AI (Perplexity API), and generates a detailed psychological persona. The project features a modern React frontend, robust Node.js/Express backend, and a Python script for batch persona generation.
 
 ---
 
@@ -29,7 +29,7 @@
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/yashjadhav1595-projects/reddit-soul-scribe1.git
-cd reddit-soul-scribe1
+cd reddit-soul-scribe
 ```
 
 ### 2. Install Node.js Dependencies
@@ -67,11 +67,11 @@ The frontend will run on [http://localhost:5173](http://localhost:5173) (or as s
 
 ### Requirements
 - Python 3.8+
-- `requests` library (`pip install requests`)
+- `requests` library (`pip install requirements.txt`)
 
 ### Usage
 ```bash
-python generate_persona.py <reddit_username>
+python generate_persona.py <reddit_username >
 ```
 - This will fetch the persona for the given Reddit user and save it as `persona_<username>.txt` in the current directory.
 
