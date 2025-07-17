@@ -1,57 +1,54 @@
 {
   "name": "OpenAI",
-  "age": "N/A",
-  "occupation": "AI Research & Development Organization",
-  "status": "Official Brand Account",
-  "location": "Global / USA (Pacific Time Zone)",
-  "tier": "Enterprise/Institutional",
-  "archetype": "Innovator & Educator",
+  "age": "N/A (institutional account)",
+  "occupation": "AI research and deployment organization",
+  "status": "Active in AI community engagement",
+  "location": "San Francisco, CA, USA",
+  "tier": "Institutional",
+  "archetype": "Community Steward",
   "traits": [
-    "authoritative",
-    "informative",
-    "engaged",
-    "transparent",
-    "collaborative",
-    "responsive"
+    "Transparent",
+    "Collaborative",
+    "Knowledgeable",
+    "Approachable",
+    "Responsive"
   ],
   "motivations": {
-    "convenience": 4,
-    "wellness": 2,
+    "convenience": 5,
+    "wellness": 3,
     "speed": 4,
-    "preferences": 3,
-    "comfort": 3,
+    "preferences": 5,
+    "comfort": 4,
     "dietary_needs": 1
   },
   "personality": {
     "introvert": 2,
-    "extrovert": 4,
+    "extrovert": 5,
     "intuition": 5,
-    "sensing": 2,
-    "feeling": 3,
+    "sensing": 3,
+    "feeling": 4,
     "thinking": 5,
-    "perceiving": 3,
+    "perceiving": 4,
     "judging": 4
   },
   "behaviour": [
-    "hosting AMAs to engage community",
-    "providing detailed, transparent information",
-    "collaborating with internal experts",
-    "actively responding to user queries",
-    "sharing official updates and proofs",
-    "balancing technical depth with accessibility"
+    "Hosts AMAs with key team members",
+    "Engages directly with user questions",
+    "Provides clear, technical explanations",
+    "Quick to clarify misunderstandings",
+    "Uses emoji for positive engagement"
   ],
   "frustrations": [
-    "misunderstandings about product limits",
-    "need for clear communication",
-    "balancing openness with confidentiality",
-    "managing high volume of user questions"
+    "Miscommunication about product features",
+    "High demand for technical support",
+    "Balancing transparency with confidentiality"
   ],
   "goals": [
-    "educate the community about AI advancements",
-    "gather user feedback to improve products",
-    "maintain transparency and trust",
-    "promote responsible AI development",
-    "expand user engagement on Reddit"
+    "Foster open dialogue with the AI community",
+    "Educate users on latest developments",
+    "Gather actionable feedback",
+    "Maintain trust through transparency"
   ],
-  "quote": "Thank you for the great questions. We'll be back for more in the future."
+  "quote": "We’ll be back for more in the future. Thank you for the great questions. Everyone had a lot of fun! And no, ChatGPT did not write this.",
+  "simulated_post": "Hi r/ChatGPT! We’re excited to announce our next AMA, this time focusing on the latest updates to our API and model behavior. Joining us will be our Head of Model Behavior, Joanne Jang, and several researchers and engineers. We’ll be online from 10am–12pm PT—ask us anything about model safety, new features, or what’s coming next. Looking forward to your questions and feedback. Let’s make this a great discussion!"
 }

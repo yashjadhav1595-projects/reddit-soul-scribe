@@ -497,13 +497,32 @@ app.post("/api/analyze", async (req, res) => {
     console.log(`[Express] Starting persona generation with Perplexity API...`);
     const persona = await generatePerplexityPersona(redditData);
     console.log(`[Express] Persona generated:`, JSON.stringify(persona, null, 2));
-    // Export persona to a text file
-    const personaFilePath = path.join(__dirname, `persona_output_${username}.txt`);
-    fs.writeFileSync(personaFilePath, JSON.stringify(persona, null, 2), 'utf-8');
-    console.log(`[Express] Persona exported to file: ${personaFilePath}`);
+// 1. Get export path from request or use default
+const userExportPath = req.body.exportPath?.trim() || path.join(__dirname, 'exports');
 
-    // Generate HTML output for persona
-    const personaHtmlFilePath = path.join(__dirname, `persona_output_${username}.html`);
+// 2. Create the folder if it doesn’t exist
+if (!fs.existsSync(userExportPath)) {
+  fs.mkdirSync(userExportPath, { recursive: true });
+}
+
+// 3. Write TXT file
+const personaFilePath = path.join(userExportPath, `persona_output_${username}.txt`);
+try {
+  fs.writeFileSync(personaFilePath, JSON.stringify(persona, null, 2), 'utf-8');
+  console.log(`[Express] Persona exported to file: ${personaFilePath}`);
+} catch (err) {
+  console.error("❌ Error writing persona file:", err.message);
+}
+
+// 4. Write HTML file
+const personaHtmlFilePath = path.join(userExportPath, `persona_output_${username}.html`);
+try {
+  fs.writeFileSync(personaHtmlFilePath, htmlContent, 'utf-8');
+  console.log(`[Express] Persona HTML exported to file: ${personaHtmlFilePath}`);
+} catch (err) {
+  console.error("❌ Error writing HTML file:", err.message);
+}
+
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>

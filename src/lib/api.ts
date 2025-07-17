@@ -46,9 +46,9 @@ export interface AnalysisResult {
   simulatedPost?: string;
 }
 
-export const analyzeRedditUser = async (username: string): Promise<AnalysisResult> => {
+export const analyzeRedditUser = async (username: string, exportPath?: string): Promise<AnalysisResult> => {
   try {
-    const response = await api.post('/api/analyze', { username });
+    const response = await api.post('/api/analyze', { username, exportPath });
 
     if (response.data.success) {
       const data = response.data.data;

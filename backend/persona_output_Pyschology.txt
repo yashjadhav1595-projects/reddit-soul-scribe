@@ -1,51 +1,55 @@
 {
-  "name": "Alex Morgan",
-  "age": "25-35",
-  "occupation": "Academic Researcher / Graduate Student",
-  "status": "Single",
-  "location": "Urban, English-speaking country",
-  "tier": "Mid-level",
-  "archetype": "The Inquisitive Analyst",
+  "name": "Emma Carter",
+  "age": "28",
+  "occupation": "Psychology Graduate Student",
+  "status": "Student",
+  "location": "Chicago, IL",
+  "tier": "Low-Engagement Academic",
+  "archetype": "Curious Observer",
   "traits": [
-    "curious",
-    "analytical",
-    "detail-oriented",
-    "reserved",
-    "academically driven"
+    "Academically Inclined",
+    "Socially Conscious",
+    "Reserved Online",
+    "Empathetic",
+    "Detail-Oriented"
   ],
   "motivations": {
     "convenience": 2,
-    "wellness": 3,
+    "wellness": 4,
     "speed": 2,
-    "preferences": 4,
-    "comfort": 3,
-    "dietary_needs": 1
+    "preferences": 3,
+    "comfort": 4,
+    "dietary_needs": 3
   },
   "personality": {
     "introvert": 4,
     "extrovert": 2,
-    "intuition": 4,
-    "sensing": 2,
-    "feeling": 3,
-    "thinking": 5,
+    "intuition": 5,
+    "sensing": 3,
+    "feeling": 4,
+    "thinking": 4,
     "perceiving": 3,
     "judging": 4
   },
   "behaviour": [
-    "Engages primarily through posting academic survey invitations",
-    "Focuses on research topics related to social attitudes and behaviors",
-    "Prefers structured, data-driven discussions",
-    "Minimal interaction in comment sections"
+    "Rarely posts or comments",
+    "Prefers to observe discussions",
+    "Occasionally participates in academic surveys",
+    "Values privacy",
+    "Selective about online engagement"
   ],
   "frustrations": [
-    "Lack of quality participant responses",
-    "Difficulty reaching target demographic for studies",
-    "Time constraints in data collection"
+    "Lack of meaningful academic engagement",
+    "Limited community interaction",
+    "Overly promotional content",
+    "Superficial discussions"
   ],
   "goals": [
-    "Collect meaningful and diverse data for academic research",
-    "Gain insights into social perceptions and behaviors",
-    "Publish research findings in credible forums"
+    "Contribute to academic research",
+    "Gain insights into social issues",
+    "Connect with like-minded peers",
+    "Maintain online privacy"
   ],
-  "quote": "Understanding human attitudes is key to driving meaningful change."
+  "quote": "I believe understanding people starts with listening, not just speaking.",
+  "simulated_post": "Looking for participants for a short survey on societal perceptions of mental health. If you have 10 minutes to spare, your input could help shape better support systems for those in need. All responses are anonymous. Thanks in advance for contributing to meaningful research!"
 }

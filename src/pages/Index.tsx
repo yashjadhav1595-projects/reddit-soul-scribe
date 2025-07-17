@@ -4,7 +4,6 @@ import { SmartInputBox } from '@/components/SmartInputBox';
 import { EnhancedPersonaCard } from '@/components/EnhancedPersonaCard';
 import { ProgressiveLoadingSpinner } from '@/components/ProgressiveLoadingSpinner';
 import { CitationsList } from '@/components/CitationsList';
-import { DownloadButton } from '@/components/DownloadButton';
 import { HowItWorks } from '@/components/HowItWorks';
 import { PersonaImage } from '@/components/PersonaImage';
 import { SimulatedPost } from '@/components/SimulatedPost';
@@ -47,6 +46,8 @@ const Index = () => {
   const { toast } = useToast();
   const [simulatedPost, setSimulatedPost] = useState<string | undefined>(undefined);
   const [simPostLoading, setSimPostLoading] = useState(false);
+  // Add state for exportPath
+  const [exportPath, setExportPath] = useState('');
 
   const addLog = (msg: string) => {
     setLogMessages(prev => [...prev, msg]);
@@ -103,8 +104,8 @@ const Index = () => {
     try {
       if (backendStatus === 'online') {
         addLog(`[Frontend] Backend is online. Calling analyzeRedditUser for ${inputUsername}`);
-        // Use real API
-        const result = await analyzeRedditUser(inputUsername);
+        // Use real API, pass exportPath
+        const result = await analyzeRedditUser(inputUsername, exportPath || undefined);
         addLog(`[Frontend] analyzeRedditUser response: ${JSON.stringify(result)}`);
         setAnalysisResult(result);
         setPersona(result.persona);
@@ -240,7 +241,7 @@ const Index = () => {
                 ✨ Enhanced UX
               </Badge>
               {backendStatus === 'online' && (
-                <Badge variant="default" className="hidden sm:flex bg-green-500">
+                <Badge variant="default" className="hidden sm:flex bg-green-300">
                   🟢 AI Backend Online
                 </Badge>
               )}
@@ -252,7 +253,7 @@ const Index = () => {
               <ThemeToggle />
               <Button variant="ghost" size="sm" className="gap-2">
                 <Github className="h-4 w-4" />
-                <span className="hidden sm:inline">GitHub</span>
+                <span className="hidden sm:inline" onClick={() => window.open('https://github.com/yashjadhav1595-projects/reddit-soul-scribe', '_blank')}>GitHub</span>
               </Button>
             </div>
           </div>
@@ -286,7 +287,7 @@ const Index = () => {
                   <Sparkles className="h-5 w-5" />
                   Try Enhanced Demo
                 </Button>
-                <Button variant="outline" size="lg" className="px-8 py-6 text-lg">
+                <Button variant="outline" size="lg" className="px-8 py-6 text-lg" onClick={() => window.open('https://github.com/yashjadhav1595-projects/reddit-soul-scribe', '_blank')}>
                   <Github className="h-5 w-5" />
                   View Source
                 </Button>
@@ -383,11 +384,6 @@ const Index = () => {
             <CitationsList
               citations={citations}
               username={username}
-            />
-            <DownloadButton
-              persona={persona}
-              username={username}
-              citations={citations}
             />
           </section>
         )}
