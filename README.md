@@ -1,4 +1,4 @@
-# Reddit Soul Scribe 1
+# Reddit Soul Scribe 
 
 ![Node.js](https://img.shields.io/badge/Node.js-18%2B-brightgreen)
 ![React](https://img.shields.io/badge/React-18-blue)
@@ -87,16 +87,6 @@ python generate_persona.py StationLevel1840
 - Reddit user data and persona are shown in the frontend for comparison.
 - Persona .txt files are generated for each analyzed user.
 
----
-
-## 📦 Submission Instructions
-- **You have 48 hours to complete this assignment.**
-- Submit the link to your public GitHub repository before the deadline.
-- Make sure your repository is public so it can be evaluated.
-- Your repo must contain:
-  - All project files (backend, frontend, Python script)
-  - Persona .txt files (if generated)
-  - This README.md with clear setup and usage instructions
 
 ---
 
@@ -110,7 +100,3 @@ python generate_persona.py StationLevel1840
 ## 👨‍💻 Author
 - [yashjadhav1595-projects](https://github.com/yashjadhav1595-projects)
 
----
-
-## 📝 License
-MIT
