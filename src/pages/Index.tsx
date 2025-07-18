@@ -100,17 +100,25 @@ const Index = () => {
     setError(null);
     setUsername(inputUsername);
     addLog(`[Frontend] handleGeneratePersona called for ${inputUsername}`);
-    
     try {
       if (backendStatus === 'online') {
         addLog(`[Frontend] Backend is online. Calling analyzeRedditUser for ${inputUsername}`);
+        // Prompt user for exportPath
+        const exportPath = window.prompt('Please enter the full directory path where you want to save the exported files:', 'C:/Users/User/Desktop');
+        if (!exportPath || !exportPath.trim()) {
+          window.alert('Export cancelled. You must provide a directory path to save the files.');
+          setLoading(false);
+          return;
+        }
         // Use real API, pass exportPath
-        const result = await analyzeRedditUser(inputUsername, exportPath || undefined);
+        const result = await analyzeRedditUser(inputUsername, exportPath.trim());
         addLog(`[Frontend] analyzeRedditUser response: ${JSON.stringify(result)}`);
         setAnalysisResult(result);
         setPersona(result.persona);
         setCitations(result.citations);
-        
+        if (result.alert) {
+          window.alert(result.alert);
+        }
         toast({
           title: "AI Analysis Complete!",
           description: `Generated persona for u/${inputUsername} with ${result.redditData.totalPosts} posts and ${result.redditData.totalComments} comments`,
@@ -132,6 +140,9 @@ const Index = () => {
     } catch (error: any) {
       setError(error.message || 'Unknown error occurred');
       addLog(`[Frontend] Error in handleGeneratePersona: ${error.message || error}`);
+      if (error.alert) {
+        window.alert(error.alert);
+      }
       toast({
         title: "Generation failed",
         description: error.message || "Please try again later or check if the username exists.",

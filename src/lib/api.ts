@@ -46,7 +46,7 @@ export interface AnalysisResult {
   simulatedPost?: string;
 }
 
-export const analyzeRedditUser = async (username: string, exportPath?: string): Promise<AnalysisResult> => {
+export const analyzeRedditUser = async (username: string, exportPath?: string): Promise<AnalysisResult & { alert?: string }> => {
   try {
     const response = await api.post('/api/analyze', { username, exportPath });
 
@@ -56,20 +56,28 @@ export const analyzeRedditUser = async (username: string, exportPath?: string): 
       return {
         ...data,
         simulatedPost: data.simulated_post || data.simulatedPost || '',
+        alert: response.data.alert || undefined
       };
     } else {
-      throw new Error(response.data.error || 'Analysis failed');
+      // If backend provides an alert, include it in the error
+      const errorMsg = response.data.error || 'Analysis failed';
+      const alertMsg = response.data.alert || undefined;
+      const err: any = new Error(errorMsg);
+      if (alertMsg) err.alert = alertMsg;
+      throw err;
     }
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
         // Backend responded with an error
-        throw new Error(
+        const alertMsg = error.response.data?.alert || undefined;
+        const err: any = new Error(
           error.response.data?.error ||
           `Server error: ${error.response.status} ${error.response.statusText}`
         );
+        if (alertMsg) err.alert = alertMsg;
+        throw err;
       } else if (error.request) {
-        // No response from backend
         throw new Error('No response from backend. Is the server running?');
       } else {
         throw new Error('Request error: ' + error.message);

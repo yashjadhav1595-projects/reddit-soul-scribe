@@ -409,7 +409,16 @@ async function generatePerplexityPersona(userData) {
   "frustrations": ["string"],
   "goals": ["string"],
   "quote": "string",
-  "simulated_post": "string" // Add a simulated Reddit post this user might write, based on their persona and writing style."
+  "simulated_post": "string" // Add a simulated Reddit post this user might write, based on their persona and writing style.",
+  "citations": {
+    "name": { "text": "post or comment text", "link": "permalink" },
+    "age": { "text": "...", "link": "..." },
+    "occupation": { "text": "...", "link": "..." },
+    ...
+    // For each persona field above, cite the post or comment (with text and permalink) that was used to infer it.
+    // If a field is inferred from multiple posts/comments, cite the most relevant one.
+    // If a field is not directly supported by any post/comment, leave its citation empty.
+  }
 }\n\nUser data:\n${JSON.stringify(userData)}\n\nReturn only the JSON object.`;
   try {
     const payload = {
@@ -462,11 +471,18 @@ async function generatePerplexityPersona(userData) {
 
 app.post("/api/analyze", async (req, res) => {
   console.log("[Express] /api/analyze endpoint hit.");
-  const { username, comprehensive = false } = req.body;
-  console.log(`[Express] Request body: username=${username}, comprehensive=${comprehensive}`);
+  const { username, comprehensive = false, exportPath } = req.body;
+  console.log(`[Express] Request body: username=${username}, comprehensive=${comprehensive}, exportPath=${exportPath}`);
   if (!username) {
     console.log("[Express] Missing username in request body.");
-    return res.status(400).json({ error: "Missing username" });
+    return res.status(400).json({ error: "Missing username", alert: "Please provide a Reddit username." });
+  }
+  if (!exportPath || typeof exportPath !== 'string' || !exportPath.trim()) {
+    return res.status(400).json({
+      success: false,
+      error: "Missing exportPath",
+      alert: "Please select a location to save the exported files."
+    });
   }
   // Check if required environment variables are set
   if (!REDDIT_CLIENT_ID || !REDDIT_CLIENT_SECRET || !REDDIT_USER_AGENT || !PERPLEXITY_API_KEY) {
@@ -477,7 +493,8 @@ app.post("/api/analyze", async (req, res) => {
       missing: {
         reddit: !!(REDDIT_CLIENT_ID && REDDIT_CLIENT_SECRET && REDDIT_USER_AGENT),
         perplexity: !!PERPLEXITY_API_KEY
-      }
+      },
+      alert: "Backend configuration incomplete. Please contact the administrator."
     });
   }
   try {
@@ -497,74 +514,178 @@ app.post("/api/analyze", async (req, res) => {
     console.log(`[Express] Starting persona generation with Perplexity API...`);
     const persona = await generatePerplexityPersona(redditData);
     console.log(`[Express] Persona generated:`, JSON.stringify(persona, null, 2));
-// 1. Get export path from request or use default
-const userExportPath = req.body.exportPath?.trim() || path.join(__dirname, 'exports');
 
-// 2. Create the folder if it doesn’t exist
-if (!fs.existsSync(userExportPath)) {
-  fs.mkdirSync(userExportPath, { recursive: true });
-}
+    // 1. Use exportPath from request
+    const userExportPath = exportPath.trim();
 
-// 3. Write TXT file
-const personaFilePath = path.join(userExportPath, `persona_output_${username}.txt`);
-try {
-  fs.writeFileSync(personaFilePath, JSON.stringify(persona, null, 2), 'utf-8');
-  console.log(`[Express] Persona exported to file: ${personaFilePath}`);
-} catch (err) {
-  console.error("❌ Error writing persona file:", err.message);
-}
+    // 2. Create the folder if it doesn’t exist
+    if (!fs.existsSync(userExportPath)) {
+      fs.mkdirSync(userExportPath, { recursive: true });
+    }
 
-// 4. Write HTML file
-const personaHtmlFilePath = path.join(userExportPath, `persona_output_${username}.html`);
-try {
-  fs.writeFileSync(personaHtmlFilePath, htmlContent, 'utf-8');
-  console.log(`[Express] Persona HTML exported to file: ${personaHtmlFilePath}`);
-} catch (err) {
-  console.error("❌ Error writing HTML file:", err.message);
-}
+    // 3. Write TXT file
+    const personaFilePath = path.join(userExportPath, `persona_output_${username}.txt`);
+    let txtSuccess = true;
+    try {
+      fs.writeFileSync(personaFilePath, JSON.stringify(persona, null, 2), 'utf-8');
+      console.log(`[Express] Persona exported to file: ${personaFilePath}`);
+    } catch (err) {
+      txtSuccess = false;
+      console.error("❌ Error writing persona file:", err.message);
+    }
 
+    // 4. Write HTML file
+    const personaHtmlFilePath = path.join(userExportPath, `persona_output_${username}.html`);
+    let htmlSuccess = true;
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Reddit Persona Report for ${persona.name}</title>
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; background: #181A20; color: #F3F4F6; margin: 0; padding: 0; }
-    .container { max-width: 900px; margin: 40px auto; background: #23272F; border-radius: 18px; box-shadow: 0 8px 32px #0004; padding: 40px; }
-    .header { display: flex; align-items: center; gap: 32px; margin-bottom: 32px; }
-    .portrait { width: 160px; height: 160px; border-radius: 24px; object-fit: cover; box-shadow: 0 4px 16px #0006; background: #222; }
-    .persona-info { flex: 1; }
-    .persona-title { font-size: 2.5rem; font-weight: bold; color: #FF4500; margin-bottom: 8px; }
-    .archetype { font-size: 1.2rem; color: #A78BFA; margin-bottom: 8px; }
-    .section { margin-top: 32px; }
-    .section-title { font-size: 1.4rem; color: #FFB020; margin-bottom: 12px; font-weight: 600; }
-    .traits, .motivations, .personality, .behaviour, .frustrations, .goals { margin-bottom: 16px; }
-    .trait, .motivation, .personality-item, .behaviour-item, .frustration-item, .goal-item { margin-bottom: 6px; }
-    .quote { background: #FF4500; color: #fff; padding: 16px; border-radius: 12px; font-size: 1.1rem; margin: 24px 0; }
-    .citations { background: #23272F; border: 1px solid #444; border-radius: 12px; padding: 18px; margin-top: 24px; }
-    .citation-group { margin-bottom: 18px; }
-    .citation-title { color: #A78BFA; font-weight: 600; }
-    .citation-text { color: #F3F4F6; font-style: italic; margin-left: 12px; }
-    .simulated-post { background: #181A20; border: 1px solid #444; border-radius: 12px; padding: 18px; margin-top: 24px; }
-    .sim-title { color: #FFB020; font-weight: 600; margin-bottom: 8px; }
-    .footer { margin-top: 40px; color: #888; font-size: 0.95rem; text-align: center; }
+    :root {
+      --bg-dark: #0F1117;
+      --card-bg: #1E212B;
+      --accent: #FF4500;
+      --highlight: #FFB020;
+      --soft-purple: #A78BFA;
+      --glass: rgba(255, 255, 255, 0.05);
+    }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-dark);
+      color: #E5E7EB;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 880px;
+      margin: 50px auto;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      padding: 40px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .avatar-symbol {
+      background: var(--glass);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--accent);
+      text-shadow: 1px 1px 3px #000;
+      box-shadow: inset 0 0 10px #00000055, 0 4px 20px #00000040;
+    }
+    .persona-info {
+      flex: 1;
+    }
+    .persona-title {
+      font-size: 2.4rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+    .archetype {
+      font-size: 1.2rem;
+      color: var(--soft-purple);
+      margin-bottom: 8px;
+    }
+    .info-row {
+      margin-bottom: 6px;
+    }
+    .section {
+      margin-top: 32px;
+    }
+    .section-title {
+      font-size: 1.3rem;
+      color: var(--highlight);
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .motivation, .personality-item, .behaviour-item, .frustration-item, .goal-item {
+      margin-bottom: 6px;
+    }
+    .quote {
+      background: var(--accent);
+      color: white;
+      padding: 18px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      margin: 32px 0 16px;
+      font-style: italic;
+    }
+    .simulated-post {
+      background: var(--bg-dark);
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 32px;
+    }
+    .sim-title {
+      color: var(--highlight);
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 1.1rem;
+    }
+    .citations {
+      background: var(--glass);
+      border: 1px solid #444;
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 32px;
+    }
+    .citation-group {
+      margin-bottom: 16px;
+    }
+    .citation-title {
+      color: var(--soft-purple);
+      font-weight: 600;
+    }
+    .citation-text {
+      color: #D1D5DB;
+      font-style: italic;
+      margin-left: 8px;
+    }
+    a {
+      color: var(--highlight);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: 48px;
+      font-size: 0.95rem;
+      color: #888;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="persona-report">
     <div class="header">
-      <img class="portrait" src="${persona.portrait_url || 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=facearea&w=400&h=400&q=80'}" alt="Persona portrait" />
+      <div class="avatar-symbol">${persona.name?.[0]?.toUpperCase() || 'U'}</div>
       <div class="persona-info">
         <div class="persona-title">${persona.name}</div>
         <div class="archetype">${persona.archetype || ''}</div>
-        <div>Age: <b>${persona.age}</b></div>
-        <div>Occupation: <b>${persona.occupation}</b></div>
-        <div>Status: <b>${persona.status || ''}</b></div>
-        <div>Location: <b>${persona.location}</b></div>
-        <div>Tier: <b>${persona.tier || ''}</b></div>
+        <div class="info-row">Age: <b>${persona.age}</b></div>
+        <div class="info-row">Occupation: <b>${persona.occupation}</b></div>
+        <div class="info-row">Status: <b>${persona.status || ''}</b></div>
+        <div class="info-row">Location: <b>${persona.location}</b></div>
+        <div class="info-row">Tier: <b>${persona.tier || ''}</b></div>
       </div>
     </div>
-    <div class="quote">${persona.quote || ''}</div>
+    <div class="quote">${persona.quote || '“The journey defines the user.”'}</div>
     <div class="section motivations">
       <div class="section-title">Motivations</div>
       ${Object.entries(persona.motivations || {}).map(([k, v]) => `<div class="motivation">${k.charAt(0).toUpperCase() + k.slice(1)}: <b>${v}/5</b></div>`).join('')}
@@ -591,17 +712,38 @@ try {
     </div>
     <div class="section citations">
       <div class="section-title">Citations</div>
-      ${(persona.citations ? Object.entries(persona.citations).map(([trait, citation]) => `<div class="citation-group"><span class="citation-title">${trait.charAt(0).toUpperCase() + trait.slice(1)}:</span><span class="citation-text">"${citation.text}"</span>${citation.link ? ` <a href="${citation.link}" style="color:#FFB020;" target="_blank">[source]</a>` : ''}</div>`).join('') : 'No citations available.')}
+      ${(persona.citations ? Object.entries(persona.citations).map(([trait, citation]) => `
+        <div class="citation-group">
+          <span class="citation-title">${trait.charAt(0).toUpperCase() + trait.slice(1)}:</span>
+          <span class="citation-text">"${citation.text}"</span>
+          ${citation.link ? ` <a href="${citation.link}" target="_blank">[source]</a>` : ''}
+        </div>`).join('') : '<i>No citations available.</i>')}
     </div>
-    <div class="footer">Persona generated by Reddit Soul Scribe &bull; AI-powered analysis &bull; ${new Date().toLocaleDateString()}</div>
+    <div class="footer">Persona generated by <b>Reddit Soul Scribe</b> &bull; AI-powered insights &bull; ${new Date().toLocaleDateString()}</div>
   </div>
 </body>
 </html>`;
-    fs.writeFileSync(personaHtmlFilePath, htmlContent, 'utf-8');
-    console.log(`[Express] Persona HTML exported to file: ${personaHtmlFilePath}`);
+    try {
+      fs.writeFileSync(personaHtmlFilePath, htmlContent, 'utf-8');
+      console.log(`[Express] Persona HTML exported to file: ${personaHtmlFilePath}`);
+    } catch (err) {
+      htmlSuccess = false;
+      console.error("❌ Error writing HTML file:", err.message);
+    }
+
+    let alertMsg;
+    if (txtSuccess && htmlSuccess) {
+      alertMsg = `Persona exported successfully to: ${userExportPath}`;
+    } else if (!txtSuccess && !htmlSuccess) {
+      alertMsg = `Failed to export persona files. Please check the export location and permissions.`;
+    } else if (!txtSuccess) {
+      alertMsg = `TXT file export failed, but HTML export succeeded. Check permissions for: ${personaFilePath}`;
+    } else {
+      alertMsg = `HTML file export failed, but TXT export succeeded. Check permissions for: ${personaHtmlFilePath}`;
+    }
 
     res.json({
-      success: true,
+      success: txtSuccess && htmlSuccess,
       data: {
         redditData,
         persona,
@@ -611,6 +753,7 @@ try {
         portrait_url: persona.portrait_url,
         citations: persona.citations
       },
+      alert: alertMsg
     });
     console.log(`[Express] Response sent for /api/analyze.`);
   } catch (error) {
@@ -618,7 +761,7 @@ try {
     const redditError = error?.reddit || error?.response?.data || error.message;
     console.error("Error in /api/analyze:", redditError);
     console.error("Full error object:", error);
-    res.status(status || 500).json({ success: false, error: redditError, details: error });
+    res.status(status || 500).json({ success: false, error: redditError, details: error, alert: `Failed to export persona: ${redditError}` });
   }
 });
 

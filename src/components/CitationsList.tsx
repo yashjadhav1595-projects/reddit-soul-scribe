@@ -69,15 +69,15 @@ export const CitationsList: React.FC<CitationsListProps> = ({ citations = {}, us
                         {trait.replace(/_/g, ' ')}
                       </Badge>
                       {citationLink && (
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
                           onClick={() => window.open(citationLink, '_blank')}
-                          className="text-xs"
-                        >
-                          <ExternalLink className="h-3 w-3 mr-1" />
+                        className="text-xs"
+                      >
+                        <ExternalLink className="h-3 w-3 mr-1" />
                           View Source
-                        </Button>
+                      </Button>
                       )}
                     </div>
                     <blockquote className="border-l-4 border-reddit-orange pl-4 italic text-muted-foreground text-base">
